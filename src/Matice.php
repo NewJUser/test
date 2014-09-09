@@ -13,7 +13,7 @@ class Matice {
     public function __construct(Array $_matrix) {
         self::$matrix = $_matrix;
     }
-
+    // 
     static public function obvod() { //hotovo
         $result = 0;
         $vnitrek = 0;
