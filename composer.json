@@ -1,0 +1,8 @@
+{
+	"require": {
+		"nette/tester": "*" 
+	},
+	"require-dev": {
+		"nette/tester": "*"
+	}
+}

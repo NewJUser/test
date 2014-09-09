@@ -1,0 +1,992 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"sql",
+				"sqlite_close"
+			],
+			[
+				"na",
+				"namespace"
+			],
+			[
+				"def",
+				"define"
+			],
+			[
+				"kome",
+				"komentare"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"co",
+				"co"
+			],
+			[
+				"text",
+				"textarea"
+			],
+			[
+				"nacti",
+				"nactiHesloUzivatele"
+			],
+			[
+				"uz",
+				"uzivatele"
+			],
+			[
+				"zme",
+				"zmenZabalenostBalicku"
+			],
+			[
+				"odhlas",
+				"odhlasUzivatele"
+			],
+			[
+				"array_un",
+				"array_unshift"
+			],
+			[
+				"ulo",
+				"ulozBalik"
+			],
+			[
+				"nomen",
+				"NOMEN"
+			],
+			[
+				"nac",
+				"nactiHesloUzivatele"
+			],
+			[
+				"vy",
+				"vychoziCin"
+			],
+			[
+				"m",
+				"meta	Tag"
+			],
+			[
+				"meta",
+				"META	Tag"
+			],
+			[
+				"_",
+				"_SESSION"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "koncept abstrakce funkcionalit, odstínění funkcí a objektů\nabstrakce nad funkcionalitou = objekt\n\njiný konkrétní kód, který dělá to, za co se vydává = implementace\nnyní jsou implementované funkce tak, aby ukládaly do souboru\nchci ale přeimplementovat do databáze\nadd() ukládá do databáze A,\nget() čte z databáze B, těch může být víc\ngetAll() A a B se navzájem synchronizují\n\nChtěl bych za chodu měnit způsob pro ukládání dat\nredefinování funkcí za běhu není v php možné\nobjekty někdy nazývány službami\nidentita odlišuje objekty stejné třídy\ntype hinting\n<?php\nclass Controller {\n	var $comments;\n\n	function __construct(Comments $comments) { //jaky je rozdil mezi Controller()?  musim dovodi ze kdz se jmenuje stejne tak je to konstruktor, musim s tridou menit nazev konstruktoru, will be deprecated\n		print 'tvorim se';\n		// parent::__construct\n		$this->comments = $comments;	\n	}\n\n	function actionUlozKomentar() {\n		var_dump($this->comments->getComments());\n	}\n}\n\nclass Comments {\n	function addComments($comment, $function) {\n		\n	}\n\n	function getComments($comment, $function) {\n		return ['a', 'b'];\n	}\n\n	function getAllComments($comment, $function) {\n\n	}\n}\n\n$comments = new Comments;\n$controller = new Controller($comments);\n$controller -> actionUlozKomentar();",
+			"file": "/C/new/skola/twa/11.brezna2014/pozn.php",
+			"file_size": 1357,
+			"file_write_time": 130390223783906250,
+			"settings":
+			{
+				"buffer_size": 1260,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Jak na Bash\n- batch znamená command to queue jobs for later execution ()\n- název pc lze zjistit pomocí příkazu $hostname\n- používej své bat: router a disk\n- běžící služby jsou příkaz $net start\n-pokud chci spustit službu zadám: $net start ˝název˝\n- schtasks\n	- schtasks /create /s{server} /u /p /ru{spustit jako uzivatel} /rp{spustit jako heslo} /sc{specify counter} /tn /tr\n- proměnná je v %USERNAME%\n- hostname\n- aktivuje znakovou stranku 1250: $chcp 1250\n- cmd lze spustit s parametrem /u{unicode}\n- ftp\n	-lcd locally change dir\n- pouzivej zalohaRouteru\n\n",
+			"file": "/C/new/skola/batch/pozn0.txt",
+			"file_size": 572,
+			"file_write_time": 130453561325545974,
+			"settings":
+			{
+				"buffer_size": 558,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/new/skola/twa/komentare a testy/testy/comTest.phpt",
+			"settings":
+			{
+				"buffer_size": 1246,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/new/skola/twa/4.unora2014-prihlaseni/pozn.php",
+			"settings":
+			{
+				"buffer_size": 943,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/new/skola/twa/18.unora2014/pozn",
+			"settings":
+			{
+				"buffer_size": 412,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/new/skola/twa/zápisky.php",
+			"settings":
+			{
+				"buffer_size": 4209,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "<?php\n\n/*\nKrome funkci pro vypis dole je cely tento soubor Controller (C z MVC), protoze se zde rozhoduje o tom, co se na uzivateluv\npozadavek bude dit a jak se to zobrazi. Ale logika deni a logika zobrazovani je vytknuta mimo.\n*/\n\n// Kdyz mame funkce k dispozici deklarovane na jednom miste, proc tak nemit i akce?\n// Princip je vytvorit pro kazdou akci samostatnou funkci (volani akce na serveru je vlastne volani fce, pamatujete?:))\n// V tomto poli mapujeme http akce na konkretni nazvy funkci, ktere maji deni v akci na starost.\n$actions = [\n	'ulozKomentar' => 'actionUlozKomentar',\n	'detail' => 'actionDetail',\n	'default' => 'actionDefault'\n	// Do ted jsme situaci, kdy clovek akci nespecifikoval, resili nejak neurcite.\n	// Spravne ale je mit vychozi akci, na kterou uzivatele presmerujeme, kdyz nic nespecifikuje.\n	// Ta se zde jmenuje default.\n];\n\n// viz include, include_once, require, require_once\nrequire __DIR__ . '/Comments.php';\nrequire __DIR__ . '/functions.php';\n\n$comments = new comments(__DIR__  . '/komentare.txt');\n\n// prisla nam v url akce?\nif (isset($_GET['akce'])) {\n	// dokazeme obslouzit akci, kterou uzivatel posila?\n	if (isset($actions[$_GET['akce']])) {\n		// pokud ano, zavolame ji a predame ji pole $_GET a $_POST, at je jasne, s cim pracuji\n		$akce = $actions[$_GET['akce']];\n		$akce($_GET, $_POST, $comments);\n	} else {\n		// pokud ne, nastavime http navratovy kod na 404\n		http_response_code(404);\n		// a zavolame sablonu (soucast View), co vykresli omluvu\n		printNotFound();\n		exit;\n	}\n} else {\n	// pokud akce vubec neprisla, uzivatel chce asi \"titulni stranku\",\n	// tedy akci default. Tak ho na ni hezky presmerujeme.\n	http_response_code(301); // 301 = Moved Permanently, jinymi slovy \"co tu hledas je natrvalo tam a tam (viz Location)\".\n	header(\"Location: /?akce=default\");\n	exit; // K zamysleni, proc zde a o par radek vys volam exit?\n}\n\nfunction actionUlozKomentar($get, $post, Comments $co)\n{\n	if (isset($post['jmeno']) && isset($post['komentar']) && isset($post['funkce'])) {\n		$funcName = getFunctionsList()[$post['funkce']]['func'];\n		$co->addComment($funcName, $post['jmeno'], $post['komentar']);\n		//var_dump($co->file);\n		// Post > Redirect > Get\n		header(\"Location: /?akce=detail&funkce=$post[funkce]\");\n		exit;\n	} else {\n		// Mozna bychom tady mohli poresit, co se stane, kdyz uzivatel nevyplni vsechna pole\n	}\n}\n\nfunction actionDetail($get, $post, Comments $co)\n{	\n	// udelame potrebne vypocty a ziskame potrebna data\n	$seznamFunkci = getFunctionsList();\n	$funkce = $get['funkce'];\n	$nadpis = $seznamFunkci[$funkce]['title'];\n	$nazevFunkce = $seznamFunkci[$funkce]['func'];\n	\n	$result = '';\n	if (isset($get['param']) && $get['param'] !== '') {\n		$result = $nazevFunkce($get['param']);\n	}\n	\n	$comments = $co->getComments($nazevFunkce);\n	\n	// a pak zvolime co a jak vykreslime\n	printHeader();\n	printH2($nadpis);\n	printFunctionForm();\n	if ($result) {\n		printResult($result);\n	}\n	// ted napriklad vidite, jak bude jednoduche treba prohodit zobrazeni formulare ke komentarum\n	// a komentare samotne. Je to jen otazka prohozeni volani dvou funkci.\n	printComments($comments);\n	printCommentsForm();\n	printFooter();\n}\n\nfunction actionDefault($get, $post)\n{\n	// nic tu nedelame, jen volime, co se vykresli\n	printHeader();\n	printH2(\"Menu\");\n	// Ted mohu vykreslit menu funkci nejen tady, ale kdekoliv jinde pouhym zavolanim fce printFunctionsMenu()\n	printFunctionsMenu(getFunctionsList());\n}\n\n/**\n * Funkce vraci seznam dostupnych funkci modelu.\n */\nfunction getFunctionsList()\n{\n	return [\n		'prevrat' => [\n			'title' => 'převrácení řetězce',\n			'func' => 'reverse'\n		],\n\n		'zy' => [\n			'title' => 'záměna y a z',\n			'func' => 'fixQwert'\n		],\n\n		'dia89' => [\n			'title' => 'záměna diakritiky za čísla',\n			'func' => 'diacriticsToNumbers'\n		],\n\n		'quadr' => [\n			'title' => 'kvadratická rovnice',\n			'func' => 'parseAndSolveQuadratic'\n		],\n	];\n}\n\n/*\nOdtud dale deklarujeme funkce zajistujici proste vypisovani vysledku uzivateli, tedy View.\nVe funkcich akcich je volame podle toho, jak je potrebujeme.\n*/\n\nfunction printNotFound()\n{\n	?>\n	<h1>Omlouváme se,</h1>\n	<p>asi jste se překlepli při psaní adresy. Nemůžeme tu nic takového najít. Zkuste jít na\n		<a href=\"/\">domovskou stránku</a>\n	<p>404\n	<?php\n}\n\n\nfunction printHeader()\n{\n	?>\n	<html>\n	<head>\n		<title>Toolbox</title>\n		<meta charset=\"utf-8\">\n	</head>\n	<body>\n	<h1>Toolbox funkcí</h1>\n	<a href=\"/\">Domů</a><br>\n	<?php\n}\n\n\nfunction printH2($text) {\n	print \"<h2>\" . ucfirst($text) . \"</h2>\";\n}\n\n\nfunction printFunctionForm()\n{		\n	?>\n	<form action='' method='get'>\n		<input name='param' type='text' value=\"<?php print isset($_GET['param']) ? $_GET['param'] : '' ?>\"><br>\n		<button type='submit'>Odeslat</button>\n		<input name='akce' value='detail' type='hidden'>\n		<input name='funkce' value='<?= $_GET['funkce'] ?>' type='hidden'>\n	</form>\n	<?php\n}\n\n\nfunction printResult($result)\n{\n	print \"Výsledek volání funkce:\";\n	var_dump($result);\n}\n\n\nfunction printCommentsForm()\n{\n	?>\n	<hr>\n	<h3>Komentáře:</h3>\n\n	<form action=\"?akce=ulozKomentar\" method=\"post\">\n		Jméno:<br>\n		<input name=\"jmeno\"><br>\n		Příspěvek:<br>\n		<textarea name=\"komentar\"></textarea><br>\n		<input name=\"funkce\" type=\"hidden\" value=\"<?php print $_GET['funkce']; ?>\">\n		<button type=\"submit\">Odeslat</button>\n	</form>\n	<?php\n}\n\n\nfunction printComments($komentare)\n{\n	foreach ($komentare as $komentar) {\n		print \"<p>\";\n		print \"<b>\" . $komentar['jmeno'] . \"</b><br>\";\n		print \"<i>\" . $komentar['komentar'] . \"</i>\";\n		print \"</p>\";\n	}\n}\n\n\nfunction printFunctionsMenu($funkce)\n{\n	print '<ul>';\n		foreach ($funkce as $nazev => $info) {\n			print \"<li><a href='?akce=detail&funkce=$nazev'>$info[title]</a>\";\n		}\n	print '</ul>';\n}\n\n\nfunction printFooter()\n{\n	print '</body>';\n	print '</html>';\n}\n\n",
+			"file": "/C/new/skola/twa/komentare/index.php",
+			"file_size": 5980,
+			"file_write_time": 130396245031115068,
+			"settings":
+			{
+				"buffer_size": 5746,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "<?php\n\n/*\nCely obsah tohoto souboru je soucasti Modelu aplikace (M z MVC).\nNikde tu nevidime vypis dat (zodpovednost View)\nnebo rozhodovani o reakci na uzivateluv pozadavek (Controller). \n*/\n/**\n*\n*\n*neco je tak, \n*neco  onak,\n* a ejhle,\n* ma se tak dobre\n* jak by se mohl mit lepe\n* kdyz nevis, \n* tak nepis\n* vyzle\n* lize listi, \n* zima je mu\n* syr zzzzzz\n* dokonce mohu specifikovat dokumentaci\n* @param string Co chces za retezec?\n* @return co to vlaste vraci\n* strlen($str);\n*/\n// vazne se controller pise takto, jak pise ho, php_ini_scanned_files(oid)\n/**\n * Prevrati vstupni retezec\n * @param  string Retezec k prevraceni\n * @return string Prevraceny retezec\n */\nfunction reverse($str)\n{\n	$result = '';\n	for ($i=0; $i<strlen($str); $i++) {\n		$result = $str[$i] . $result;\n	}\n\n	return $result;\n}\n\n\n/**\n * Nahradi 'z' a 'y' v textu\n * @param  string 'Kzyenz efekt'\n * @return string 'Kyzeny efekt'\n */\nfunction fixQwert($str)\n{\n	return strtr($str, 'yz', 'zy');\n}\n\n\n/**\n * Nahradi diakritiku za cisla\n * @param  string 'áéé ššé éýž'\n * @return string '800 330 076'\n */\nfunction diacriticsToNumbers($str)\n{\n	$replace = [\n		'+' => 1,\n		'ě' => 2,\n		'š' => 3,\n		'č' => 4,\n		'ř' => 5,\n		'ž' => 6,\n		'ý' => 7,\n		'á' => 8,\n		'í' => 9,\n		'é' => 0,\n		'Ě' => 2,\n		'Š' => 3,\n		'Č' => 4,\n		'Ř' => 5,\n		'Ž' => 6,\n		'Ý' => 7,\n		'Á' => 8,\n		'Í' => 9,\n		'É' => 0,\n	];\n	return strtr($str, $replace);\n}\n\n/**\n * Kompletni reseni kvadraticke rovnice\n * @param  [type] $equation [description]\n * @return [type]           [description]\n */\nfunction parseAndSolveQuadratic($equation)\n{\n	$coefs = parseEquation($equation);\n	if (in_array(null, $coefs)) {\n		// chyba ve formatu kvadr. rovnice\n	} else {\n		return quadraticEquation($coefs[0], $coefs[1], $coefs[2]);\n	}\n}\n\n/**\n * Najde koreny kvadraticke rovnice z korenu a, b, c\n * @param  int $a\n * @param  int $b\n * @param  int $c\n * @return array\n */\nfunction quadraticEquation($a, $b, $c)\n{\n	$discr = makeDiscriminant($a, $b, $c);\n\n	$roots = findRoots($discr, $a, $b);\n\n	return $roots;\n}\n\n/**\n * Standard format parser\n * @param  string $equation -9x^2 + 3x - 4 = 0\n * @return array            Coefitients [a,b,c]\n */\nfunction parseEquation($equation)\n{\n	$white = [\n		\" \"  => \"\",\n		\"\\t\" => \"\",\n		\"\\r\" => \"\",\n		\"\\n\" => \"\",\n		\"_\" => \"\",\n	];\n\n	$equation = strtr($equation, $white);\n	return sscanf($equation, \"%dx^2%dx%d=0\");\n}\n\n/**\n * Spocita diskriminant\n * @param  int $a\n * @param  int $b\n * @param  int $c\n * @return float\n */\nfunction makeDiscriminant($a, $b, $c)\n{\n	return  $b*$b - 4*$a*$c;\n}\n\n/**\n * Najde koreny.\n * @param  float $discr\n * @param  int $a\n * @param  int $b\n * @return array\n */\nfunction findRoots($discr, $a, $b)\n{\n	$roots = [];\n\n	if ($discr === 0) {\n		$roots[] = -$b / 2*$a;\n	} elseif ($discr > 0) {\n		$roots[] = (-$b + sqrt($discr)) / 2*$a;\n		$roots[] = (-$b - sqrt($discr)) / 2*$a;\n	}\n\n	return $roots;\n}\n",
+			"file": "/C/new/skola/twa/komentare/functions.php",
+			"file_size": 2667,
+			"file_write_time": 130321173440000000,
+			"settings":
+			{
+				"buffer_size": 2858,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/new/skola/twa/15.duben2014 database/pozn.php",
+			"settings":
+			{
+				"buffer_size": 2701,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#include <stdio.h>\n#include <sstream.h>\n#include <iostream.h>\n\nusing namespace std;\n\nclass foo\n{\npublic:\n	name(int, float, double);\n	~name();\n\n	/* data */\n};\n\nnamespace x {\n	int g=0;\n}\n\nint int main(int argc, char const *argv[])\n{\n	/* code */\n	return 0;\n}",
+			"settings":
+			{
+				"buffer_size": 255,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "<?php\n\n/*\nCely obsah tohoto souboru je soucasti Modelu aplikace (M z MVC).\nNikde tu nevidime vypis dat (zodpovednost View)\nnebo rozhodovani o reakci na uzivateluv pozadavek (Controller). \n*/\n\n// Deklarace souboru s komentari na jednom miste do konstanty, aby byla zmena jednoducha.\n// Viz 'DRY' princip.\n// Viz funkci define() a proc ji zde musime pouzit misto slova const.\n\nclass Comments {\n	//var $file = __DIR__ . \"/komentare.txt\";  //nemuze byt, protoze vytvareni trid by melo byt kontext free, jen konsty,\n	private $file; //zapouzdreni, konzistence	\n\n	public function __construct($file) {\n		$this->file = $file;\n	}\n\n	function getAllComments()\n	{\n		// Preventivne nastavime na prazdne pole,\n		// abychom meli jistotu, ze vzdy vratime alespon jej.\n		$all = [];\n		\n		if (is_file($this->file)) {\n			$all = unserialize(file_get_contents($this->file));\n		}\n		\n		return $all;\n	}\n\n\n	function getComments($function)\n	{\n		$comments = [];\n\n		$all = $this->getAllComments();\n\n		if (isset($all[$function])) {\n			$comments = $all[$function];\n		}\n		\n		return $comments;\n	}\n\n	function addComment($funkce, $name, $comment)\n	{\n		// Pouzitim getComments se opet odvolavame na jiz jednou napsanou logiku\n		// a nas kod je udrzovatelnejsi.\n		$comments = $this->getAllComments();\n		$comments[$funkce][] = [\n			'jmeno' => $name,\n			'komentar' => $comment\n		];\n		\n		file_put_contents($this->file, serialize($comments));\n	}\n\n}\n",
+			"file": "/C/new/skola/twa/komentare/comments.php",
+			"file_size": 1470,
+			"file_write_time": 130396246002060774,
+			"settings":
+			{
+				"buffer_size": 1407,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/new/skola/twa/komentare a testy/testy/CommentsTest1.php",
+			"settings":
+			{
+				"buffer_size": 598,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/new/skola/twa/datkartar/index.php",
+			"settings":
+			{
+				"buffer_size": 17508,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/new/skola/twa/18.unora2014/index.php",
+			"settings":
+			{
+				"buffer_size": 157,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/new/skola/twa/11.unora2014-prihlaseni/index.php",
+			"settings":
+			{
+				"buffer_size": 1150,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/new/skola/twa/mojeFceADalsi/index.php",
+			"settings":
+			{
+				"buffer_size": 688,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/new/skola/twa/komentare a testy/testy/funkce.test.phpt",
+			"settings":
+			{
+				"buffer_size": 209,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "8 1 4 5\n5 3 5 7\n9 2 6 1\n7 4 5 3\n\nobvod = 59\nuhlopricky = 39			",
+			"settings":
+			{
+				"buffer_size": 62,
+				"line_ending": "Windows",
+				"name": "8 1 4 5"
+			}
+		},
+		{
+			"file": "testy/matice.obvod.phpt",
+			"settings":
+			{
+				"buffer_size": 298,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "testy/matice.soucetUhlopricek.phpt",
+			"settings":
+			{
+				"buffer_size": 308,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 0.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/new/skola/psy/psychologieOptimismu.php",
+		"/C/new/skola/psy/psychologieUčení.php",
+		"/C/new/skola/zoo/Lichokopytníci!",
+		"/C/new/instalace/telnet/router.bat",
+		"/C/new/azvuky a hudba a zvuky/He's Behind You, He's Got Swine Flu.txt",
+		"/C/new/azvuky a hudba a zvuky/never went to church.txt",
+		"/C/new/azvuky a hudba a zvuky/psycho killer.txt",
+		"/C/new/skola/zoo/Sudokopytníci",
+		"/C/new/skola/twa/13.kvetna2014 -/pozn1305.php",
+		"/C/new/skola/twa/21leden2014/index.php",
+		"/C/Users/JUser/Documents/NetBeansProjects/testyToolbox/testy/fce.prevraceni.test.phpt",
+		"/C/new/skola/psy/Jung.php",
+		"/C/php-5.5/php.ini",
+		"/C/new/skola/twa/13.kvetna2014 -/db.sqlite",
+		"/C/new/skola/twa/13.kvetna2014 -/adminer-4.1.0.php",
+		"/C/Users/JUser/Documents/NetBeansProjects/testyToolbox/mujKod/testy/index.php",
+		"/C/Users/JUser/Downloads/FGwOrQ_X",
+		"/C/Users/JUser/Documents/NetBeansProjects/testyToolbox/mujKod/testy/testerMonitor.bat",
+		"/C/new/skola/psy/aj.txt",
+		"/C/Users/JUser/AppData/Roaming/Sublime Text 2/Packages/Default/Default (Windows).sublime-keymap",
+		"/C/Users/JUser/AppData/Roaming/Sublime Text 2/Packages/User/Default (Windows).sublime-keymap",
+		"/C/new/skola/twa/komentare a testy/testy/comTest.phpt",
+		"/C/NetBeansProjects/matice/testy/comTest.phpt",
+		"/C/NetBeansProjects/matice/vendor/composer/autoload_real.php",
+		"/C/NetBeansProjects/matice/vendor/autoload.php",
+		"/C/new/skola/twa/komentare a testy/functions.php",
+		"/G/Users/JUser C3COINteinera/workspace/Tetris!/src/com/tetristhe/TetrisMain.java",
+		"/C/new/skola/c/prvne.h",
+		"/C/new/skola/twa/datkartar/stulk.css",
+		"/C/new/skola/twa/datkartar/uzivatele.usx",
+		"/C/new/skola/zoo/chudozubí.php",
+		"/C/new/skola/twa/randommej/index.php",
+		"/C/new/skola/twa/11.unora2014-prihlaseni/pozn.php",
+		"/C/new/skola/twa/26.brezna2014 - testy SUT/pozn.php",
+		"/C/new/skola/twa/8.duben 2014-tester/pozn.php",
+		"/C/new/skola/twa/komentare a testy/composer.json",
+		"/C/NetBeansProjects/matice/install.json",
+		"/C/new/skola/psy/psychopatologie.php",
+		"/C/new/skola/twa/randommej/composer.json",
+		"/C/new/skola/twa/tester knihovna/composer.json",
+		"/C/new/skola/zoo/medvědi",
+		"/C/new/skola/twa/komentare a testy/vendor/ircmaxell/random-lib/README.md",
+		"/C/new/skola/twa/komentare a testy/vendor/nette/tester/readme.md",
+		"/C/new/skola/twa/komentare a testy/vendor/ircmaxell/security-lib/README.md",
+		"/C/new/skola/twa/komentare a testy/vendor/autoload.php",
+		"/C/new/skola/twa/komentare a testy/vendor/nette/tester/composer.json",
+		"/E/Symbian/Tools/Carbide.c++ v3.2/configuration/server.properties",
+		"/C/new/skola/twa/18. brezna2014-prihlaseni/testy/CommentsTest.php",
+		"/C/new/skola/twa/dalsi fce/index_funkce.php",
+		"/C/new/skola/twa/4.unora2014-prihlaseni/index.php",
+		"/C/new/skola/twa/datkartar/indexNovus.php",
+		"/G/Users/JUser C3COINteinera/workspace/Tetris!_15.1/AndroidManifest.xml",
+		"/E/Documents and Settings/JUser COINteinera/Dokumenty/scola/TWA/18leden014/pomeranc.php"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"extension_dir",
+			"extension",
+			"sqlite",
+			"paragraph",
+			"FILE",
+			"stdio",
+			"s",
+			"('",
+			"hallo",
+			"pause",
+			";\n",
+			"1",
+			"return",
+			"system",
+			"\n	",
+			"	system('pause');\n",
+			"fpoint"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"+\"],",
+			"$this->file"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 5,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/C/new/skola/twa/11.brezna2014/pozn.php",
+					"settings":
+					{
+						"buffer_size": 1260,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								332,
+								332
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/new/skola/batch/pozn0.txt",
+					"settings":
+					{
+						"buffer_size": 558,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								556,
+								556
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/new/skola/twa/komentare a testy/testy/comTest.phpt",
+					"settings":
+					{
+						"buffer_size": 1246,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								464,
+								464
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 120.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/C/new/skola/twa/4.unora2014-prihlaseni/pozn.php",
+					"settings":
+					{
+						"buffer_size": 943,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								943,
+								943
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/C/new/skola/twa/18.unora2014/pozn",
+					"settings":
+					{
+						"buffer_size": 412,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								167,
+								167
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/C/new/skola/twa/zápisky.php",
+					"settings":
+					{
+						"buffer_size": 4209,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2495,
+								2495
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/C/new/skola/twa/komentare/index.php",
+					"settings":
+					{
+						"buffer_size": 5746,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3193,
+								3193
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1221.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "/C/new/skola/twa/komentare/functions.php",
+					"settings":
+					{
+						"buffer_size": 2858,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1111,
+								1355
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 810.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "/C/new/skola/twa/15.duben2014 database/pozn.php",
+					"settings":
+					{
+						"buffer_size": 2701,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2413,
+								2413
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"settings":
+					{
+						"buffer_size": 255,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								154,
+								154
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "/C/new/skola/twa/komentare/comments.php",
+					"settings":
+					{
+						"buffer_size": 1407,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								619,
+								619
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 240.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "/C/new/skola/twa/komentare a testy/testy/CommentsTest1.php",
+					"settings":
+					{
+						"buffer_size": 598,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								501,
+								501
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "/C/new/skola/twa/datkartar/index.php",
+					"settings":
+					{
+						"buffer_size": 17508,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								206,
+								206
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "/C/new/skola/twa/18.unora2014/index.php",
+					"settings":
+					{
+						"buffer_size": 157,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								154,
+								154
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "/C/new/skola/twa/11.unora2014-prihlaseni/index.php",
+					"settings":
+					{
+						"buffer_size": 1150,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 465.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "/C/new/skola/twa/mojeFceADalsi/index.php",
+					"settings":
+					{
+						"buffer_size": 688,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								265,
+								265
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+					"file": "/C/new/skola/twa/komentare a testy/testy/funkce.test.phpt",
+					"settings":
+					{
+						"buffer_size": 209,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								139,
+								139
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"settings":
+					{
+						"buffer_size": 62,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								62,
+								62
+							]
+						],
+						"settings":
+						{
+							"auto_name": "8 1 4 5",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 18,
+					"file": "testy/matice.obvod.phpt",
+					"settings":
+					{
+						"buffer_size": 298,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								224,
+								262
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 19,
+					"file": "testy/matice.soucetUhlopricek.phpt",
+					"settings":
+					{
+						"buffer_size": 308,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								261,
+								261
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 100.0
+	},
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"",
+				"/C/new/skola/twa/11.brezna2014/pozn.php"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true
+}
